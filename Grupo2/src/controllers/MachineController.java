@@ -3,7 +3,6 @@ package controllers;
 import java.util.List;
 import java.util.Scanner;
 
-import models.BillModel;
 import models.MachineModel;
 import utils.Line;
 

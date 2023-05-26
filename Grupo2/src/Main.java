@@ -1,17 +1,9 @@
 import java.util.ArrayList;
 import java.util.List;
 
-import models.BillModel;
-import models.MachineModel;
-import models.CoinModel;
-import models.ProductModel;
-import models.PurchaseModel;
+import controllers.*;
+import models.*;
 import utils.Line;
-import controllers.BillController;
-import controllers.CoinController;
-import controllers.MachineController;
-import controllers.ProductController;
-import controllers.PurchaseController;
 import views.MachineView;
 import views.ProductView;
 import views.PurchaseView;
@@ -22,8 +14,7 @@ class Main {
 
         final PurchaseModel purchaseModel = new PurchaseModel();
 
-        final BillController billController = new BillController();
-        final CoinController coinController = new CoinController();
+        final MoneyController moneyController = new MoneyController();
         final ProductController productController = new ProductController();
         final PurchaseController purchaseController = new PurchaseController(purchaseModel, line);
         final MachineController machineController = new MachineController(purchaseController, line);
@@ -32,22 +23,22 @@ class Main {
         final MachineView machineView = new MachineView(line);
         final PurchaseView purchaseView = new PurchaseView(machineController, purchaseController, line);
 
-        final List<MachineModel> machines = generateMachines(billController, coinController, productController);
+        final List<MachineModel> machines = generateMachines(moneyController, productController);
 
         machineView.printMachineName(machines);
         productsView.printProducts(machines);
         purchaseView.purchaseMenu(machines);
     }
 
-    public static List<MachineModel> generateMachines(BillController billController, CoinController coinController, ProductController productController) {
-        final List<BillModel> billsMachine01 = billController.createBillList(3,1,2,5,10);
-        final List<CoinModel> coinsMachine01 = coinController.createCoinList(10, 20, 10);
+    public static List<MachineModel> generateMachines(MoneyController moneyController, ProductController productController) {
+        final List<MoneyModel> billsMachine01 = moneyController.createBillList(3,1,2,5,10);
+        final List<MoneyModel> coinsMachine01 = moneyController.createCoinList(10, 20, 10);
 
-        final List<BillModel> billsMachine02 = billController.createBillList(3, 2, 3, 7, 15);
-        final List<CoinModel> coinsMachine02 = coinController.createCoinList(25, 30, 20);
+        final List<MoneyModel> billsMachine02 = moneyController.createBillList(3, 2, 3, 7, 15);
+        final List<MoneyModel> coinsMachine02 = moneyController.createCoinList(25, 30, 20);
 
-        final List<BillModel> billsMachine03 = billController.createBillList(3, 1, 3, 5, 12);
-        final List<CoinModel> coinsMachine03 = coinController.createCoinList(30, 10, 15);
+        final List<MoneyModel> billsMachine03 = moneyController.createBillList(3, 1, 3, 5, 12);
+        final List<MoneyModel> coinsMachine03 = moneyController.createCoinList(30, 10, 15);
 
         final List<ProductModel> products = productController.createProductList();
 

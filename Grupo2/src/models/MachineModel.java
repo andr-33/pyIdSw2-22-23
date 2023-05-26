@@ -5,14 +5,14 @@ import java.util.List;
 public class MachineModel {
     private String name;
 
-    private List<CoinModel> coins;
+    private List<MoneyModel> coins;
 
-    private List<BillModel> bills;
+    private List<MoneyModel> bills;
 
     private List<ProductModel> products;
 
     public MachineModel(
-        String name, List<BillModel> bills, List<CoinModel> coins, List<ProductModel> products
+        String name, List<MoneyModel> bills, List<MoneyModel> coins, List<ProductModel> products
     ) {
         this.name = name;
         this.coins = coins;
@@ -20,11 +20,11 @@ public class MachineModel {
         this.products = products;
     }
 
-    public void addBills(BillModel bill) {
+    public void addBills(MoneyModel bill) {
         bills.add(bill);
     }
 
-    public void addCoins(CoinModel coin) {
+    public void addCoins(MoneyModel coin) {
         coins.add(coin);
     }
 
@@ -36,11 +36,11 @@ public class MachineModel {
         return name;
     }
 
-    public List<BillModel> listOfBills() {
+    public List<MoneyModel> listOfBills() {
         return bills;
     }
 
-    public List<CoinModel> listOfCoins() {
+    public List<MoneyModel> listOfCoins() {
         return coins;
     }
 

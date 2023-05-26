@@ -1,30 +1,33 @@
 package models;
 
-import controllers.BillController;
+import controllers.MoneyController;
 
 import java.util.List;
 import java.util.Scanner;
 
 public class PurchaseModel {
     private Scanner scanner = new Scanner(System.in);
-    final BillController billController = new BillController();
+    final MoneyController moneyController = new MoneyController();
 
-    public String returnChange(double changeValue, MachineModel machine){
-        int change = (int) changeValue;
-        int highestValue = billController.getHighestValue(machine.listOfBills());
-        return outputMessage(change, highestValue, machine.listOfBills());
+    public String returnChange(double change, MachineModel machine){
+        final String[] changes = String.valueOf(change).split("\\.");
+        int billPart = Integer.parseInt(changes[0]);
+        int coinPart = (int) (Double.parseDouble("0."+changes[1]) *100);
+        double highestBillValue = moneyController.getHighestValue(machine.listOfBills());
+        double highestCoinValue = (moneyController.getHighestValue(machine.listOfCoins()) * 100);
+        return outputMessageBills(billPart,(int)highestBillValue, machine.listOfBills()) + outputMessageCoins(coinPart,(int)highestCoinValue, machine.listOfCoins());
     }
 
-    private String outputMessage(int value, int moneySize, List<BillModel> bills){
-        if(value == 0){
-            return "-------------"+"\n";
+    private String outputMessageBills(int change, int moneySize, List<MoneyModel> bills){
+        if(change == 0){
+            return "\n";
         }
-        int quantity = value/moneySize;
-        int remainder = value%moneySize;
-        int nextSize = nextMoneySize(moneySize);
+        int quantity = change/moneySize;
+        int remainder = change%moneySize;
+        int nextSize = nextBillSize(moneySize);
         String text = "";
 
-        BillModel descountBill = getBillModelByValue(moneySize, bills);
+        MoneyModel descountBill = getMoneyModelByValue(moneySize, bills);
         int billCurrentQuantity = descountBill.quantity;
         descountBill.updateQuantity(billCurrentQuantity-quantity);
 
@@ -32,16 +35,48 @@ public class PurchaseModel {
             text = "$"+moneySize+" x "+quantity+"\n";
         }
 
-        return text + outputMessage(remainder, nextSize, bills);
+        return text + outputMessageBills(remainder, nextSize, bills);
     }
 
-    private int nextMoneySize(int moneySize){
+    private String outputMessageCoins(int change, int moneySize, List<MoneyModel> coins){
+        if(change == 0){
+            return "-------------"+"\n";
+        }
+        int quantity = change/moneySize;
+        int remainder = change%moneySize;
+        int nextSize = nextCoinSize(moneySize);
+        String text = "";
+        double representativeValue = (double) moneySize/100;
+
+        MoneyModel descountCoin = getMoneyModelByValue(representativeValue, coins);
+        System.out.println("Moneda: "+descountCoin.value+" Cantidad: "+descountCoin.quantity);
+        int coinCurrentQuantity = descountCoin.quantity;
+        descountCoin.updateQuantity(coinCurrentQuantity-quantity);
+        System.out.println("Moneda: "+descountCoin.value+" Cantidad nueva: "+descountCoin.quantity);
+
+        if(quantity != 0){
+            text = "$"+representativeValue+" x "+quantity+"\n";
+        }
+
+        return text + outputMessageBills(remainder, nextSize, coins);
+    }
+
+    private int nextBillSize(int moneySize){
         int nextSize = 0;
         switch (moneySize){
             case 20: nextSize= 10; break;
             case 10: nextSize= 5; break;
             case 5: nextSize= 2; break;
             case 2: nextSize= 1; break;
+        }
+        return nextSize;
+    }
+
+    private int nextCoinSize(int moneySize){
+        int nextSize = 0;
+        switch (moneySize){
+            case 50: nextSize= 20; break;
+            case 20: nextSize= 5; break;
         }
         return nextSize;
     }
@@ -62,46 +97,46 @@ public class PurchaseModel {
         return products.get(optionProduct - 1);
     }
 
-    private Boolean correctBillSize(double moneySize, List<BillModel> billList){
-        BillModel billShell = new BillModel(moneySize, 0);
-        for(BillModel currentBill:billList){
-            if (currentBill.compareValue(billShell)==0){
+    private Boolean correctBillSize(double moneySize, List<MoneyModel> moneyList){
+        MoneyModel moneyShell = new MoneyModel(moneySize, 0);
+        for(MoneyModel money:moneyList){
+            if (money.compareTo(moneyShell)==0){
                 return true;
             }
         }
-        System.out.println("Debes ingresar un tamaño de billete valido");
+        System.out.println("Debes ingresar un monto valido");
         return false;
     }
 
-    private BillModel getBillModelByValue(double value, List<BillModel> billList){
-        BillModel billShell = new BillModel(value, 0);
-        for (BillModel currentBill:billList) {
-            if(currentBill.compareValue(billShell) == 0){
-                return currentBill;
+    private MoneyModel getMoneyModelByValue(double value, List<MoneyModel> moneyList){
+        MoneyModel moneyShell = new MoneyModel(value, 0);
+        for (MoneyModel moneyModel:moneyList) {
+            if(moneyModel.compareTo(moneyShell) == 0){
+                return moneyModel;
             }
         }
-        return billShell;
+        return moneyShell;
     }
 
-    private void printBillsList(List<BillModel> bills){
-        for(BillModel bill:bills){
-            System.out.println("Billete: "+bill.value);
-            System.out.println("Cantidad: "+bill.quantity);
+    private void printList(List<MoneyModel> list){
+        for(MoneyModel money:list){
+            System.out.println("Dinero: "+money.value);
+            System.out.println("Cantidad: "+money.quantity);
             System.out.println("-------------------------");
         }
     }
     
-    public double depositMoney(List<BillModel> bills) {
+    public double depositMoney(List<MoneyModel> moneyList) {
         boolean correctSize = true;
         double sizeMoney = 0;
         do{
             System.out.println("Ingrese el tamaño: ");
             sizeMoney = scanner.nextDouble();
-            correctSize = correctBillSize(sizeMoney, bills);
+            correctSize = correctBillSize(sizeMoney, moneyList);
         }
         while (!correctSize);
 
-        BillModel billSelect = getBillModelByValue(sizeMoney, bills);
+        MoneyModel billSelect = getMoneyModelByValue(sizeMoney, moneyList);
 
         System.out.println("Ingrese la cantidad: ");
         double quantity = scanner.nextDouble();
@@ -112,15 +147,5 @@ public class PurchaseModel {
         return balance;
     }
 
-    public CoinModel depositMoney(CoinModel coin) {
-        System.out.println("Ingrese el tamaño: ");
-        double sizeMoney = scanner.nextDouble();
-        coin.updateValue(sizeMoney);
 
-        System.out.println("Ingrese la cantidad: ");
-        double quantity = scanner.nextDouble();
-        coin.updateQuantity((int)quantity);
-
-        return coin;
-    }
 }

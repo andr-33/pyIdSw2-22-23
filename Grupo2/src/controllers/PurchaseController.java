@@ -2,10 +2,7 @@ package controllers;
 
 import java.util.Scanner;
 
-import models.BillModel;
-import models.CoinModel;
 import models.MachineModel;
-import models.MoneyAbstract;
 import models.ProductModel;
 import models.PurchaseModel;
 import utils.Line;
@@ -33,7 +30,6 @@ public class PurchaseController {
         }
 
         final double change = moneyDeposited - selectedProduct.price;
-        //final String messageChange = purchaseModel.calculateChange(change, selectedProduct.price, machine);
         String messageChange = purchaseModel.returnChange(change, machine);
 
         printTicket(selectedProduct, messageChange);
@@ -56,7 +52,7 @@ public class PurchaseController {
             if(option.equals("1"))
                 moneyDeposited = purchaseModel.depositMoney(machine.listOfBills());
             else if(option.equals("2"))
-                moneyDeposited = purchaseModel.depositMoney(new CoinModel(0, 0)).value;
+                moneyDeposited = purchaseModel.depositMoney(machine.listOfCoins());
             else if(option.equals("3")){
                 System.out.println("Saliendo...");
                 exit = true;
