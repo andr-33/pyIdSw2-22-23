@@ -20,7 +20,7 @@ public class PurchaseModel {
 
     private String outputMessageBills(int change, int moneySize, List<MoneyModel> bills){
         if(change == 0){
-            return "\n";
+            return "";
         }
         int quantity = change/moneySize;
         int remainder = change%moneySize;
@@ -49,10 +49,8 @@ public class PurchaseModel {
         double representativeValue = (double) moneySize/100;
 
         MoneyModel descountCoin = getMoneyModelByValue(representativeValue, coins);
-        System.out.println("Moneda: "+descountCoin.value+" Cantidad: "+descountCoin.quantity);
         int coinCurrentQuantity = descountCoin.quantity;
         descountCoin.updateQuantity(coinCurrentQuantity-quantity);
-        System.out.println("Moneda: "+descountCoin.value+" Cantidad nueva: "+descountCoin.quantity);
 
         if(quantity != 0){
             text = "$"+representativeValue+" x "+quantity+"\n";
