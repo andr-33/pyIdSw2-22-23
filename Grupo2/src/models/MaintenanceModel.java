@@ -1,12 +1,9 @@
 package models;
-
+import java.util.List;
 public class MaintenanceModel {
-    String name;
+    private List<MachineModel> machines;
 
-    String type;
+    public MaintenanceModel( List<MachineModel> machines) {this.machines = machines;}
 
-    MaintenanceModel(String name, String type) {
-        this.name = name;
-        this.type = type;
-    }
+    public List<MachineModel> getMachines(){return machines;}
 }

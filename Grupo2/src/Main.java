@@ -18,10 +18,11 @@ class Main {
         final ProductController productController = new ProductController();
         final PurchaseController purchaseController = new PurchaseController(purchaseModel, line);
         final MachineController machineController = new MachineController(purchaseController, line);
+        final MaintenanceController maintenanceController = new controllers.MaintenanceController();
 
         final ProductView productsView = new ProductView(line);
         final MachineView machineView = new MachineView(line);
-        final PurchaseView purchaseView = new PurchaseView(machineController, purchaseController, line);
+        final PurchaseView purchaseView = new PurchaseView(machineController, purchaseController, maintenanceController ,line);
 
         final List<MachineModel> machines = generateMachines(moneyController, productController);
 

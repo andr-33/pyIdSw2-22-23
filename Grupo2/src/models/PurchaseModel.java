@@ -84,7 +84,7 @@ public class PurchaseModel {
 
         for (int i = 0; i < products.size(); i++) {
             final ProductModel product = products.get(i);
-            System.out.println((i + 1) + ". " + product.name + " - $" + product.price);
+            System.out.println((i + 1) + ". " + product.name + " - $" + product.price );
         }
     }
     
@@ -92,6 +92,8 @@ public class PurchaseModel {
         System.out.println("Ingrese el número del producto que desea comprar:");
 
         final int optionProduct = this.scanner.nextInt();
+        ProductModel selectedProduct = products.get(optionProduct - 1);
+        selectedProduct.updateQuantity(selectedProduct.getQuantity() - 1);
         return products.get(optionProduct - 1);
     }
 
