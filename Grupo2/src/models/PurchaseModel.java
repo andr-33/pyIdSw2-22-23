@@ -15,7 +15,16 @@ public class PurchaseModel {
         int coinPart = (int) (Double.parseDouble("0."+changes[1]) *100);
         double highestBillValue = moneyController.getHighestValue(machine.listOfBills());
         double highestCoinValue = (moneyController.getHighestValue(machine.listOfCoins()) * 100);
-        return outputMessageBills(billPart,(int)highestBillValue, machine.listOfBills()) + outputMessageCoins(coinPart,(int)highestCoinValue, machine.listOfCoins());
+        String txtCambioBills = outputMessageBills(billPart,(int)highestBillValue, machine.listOfBills());
+        String txtCambioCoins = outputMessageCoins(coinPart,(int)highestCoinValue, machine.listOfCoins());
+
+        if(txtCambioCoins.equals("-------------"+"\n")&&txtCambioBills.equals("")){
+            return "No hay cambio has pagado exacto";
+        }
+        else{
+            return txtCambioBills+txtCambioCoins;
+        }
+
     }
 
     private String outputMessageBills(int change, int moneySize, List<MoneyModel> bills){
