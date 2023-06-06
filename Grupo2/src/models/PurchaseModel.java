@@ -84,7 +84,7 @@ public class PurchaseModel {
 
         for (int i = 0; i < products.size(); i++) {
             final ProductModel product = products.get(i);
-            System.out.println((i + 1) + ". " + product.name + " - $" + product.price );
+            System.out.println((i + 1) + ". " + product.name + " - $" + product.price + " C: " + product.getQuantity());
         }
     }
     
